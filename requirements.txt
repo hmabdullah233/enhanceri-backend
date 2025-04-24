@@ -1,17 +1,36 @@
+# Core dependencies
+torch
+opencv-python
+numpy
+requests
+tqdm
+Pillow
+
+# Real-ESRGAN dependencies
+realesrgan
+basicsr
+
+# CodeFormer dependencies
+scipy
+facexlib
+gfpgan
+opencv-python-headless
+
+# BSRGAN dependencies
+lmdb
+
+# SwinIR dependencies
+einops
+
+# HDRNet dependencies
+tensorflow==2.9.1
+imageio
+
+# White-Box dependencies
+matplotlib
+scikit-image
+
+# FastAPI + server
 fastapi
 uvicorn
 python-multipart
-Pillow
-numpy
-opencv-python-headless
-torch
-torchvision
-gdown
-basicsr
-facexlib
-gfpgan
-realesrgan
-timm
-einops
-scikit-image
-imageio
