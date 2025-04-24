@@ -11,4 +11,3 @@ numpy==1.26.4
 tqdm
 gdown
 scikit-image
-git+https://github.com/sczhou/CodeFormer.git
