@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+python-multipart
+Pillow
+numpy
+opencv-python-headless
+torch
+torchvision
+gdown
+basicsr
+facexlib
+gfpgan
+realesrgan
+timm
+einops
+scikit-image
+imageio
