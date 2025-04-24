@@ -1,24 +1,27 @@
 import torch
-import cv2
-import numpy as np
-from torchvision import transforms
-from PIL import Image
+import torch.nn as nn
 
-# Dummy DCE model (replace with real one when integrating)
-def apply_dce(img):
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    pil_img = Image.fromarray(img_rgb)
+class DCEBlock(nn.Module):
+    def __init__(self, channels):
+        super(DCEBlock, self).__init__()
+        self.relu = nn.ReLU(inplace=True)
+        self.conv1 = nn.Conv2d(channels, 32, 3, 1, 1)
+        self.conv2 = nn.Conv2d(32, 32, 3, 1, 1)
+        self.conv3 = nn.Conv2d(32, 24, 3, 1, 1)
 
-    transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        transforms.ToTensor()
-    ])
-    input_tensor = transform(pil_img).unsqueeze(0)
+    def forward(self, x):
+        x = self.relu(self.conv1(x))
+        x = self.relu(self.conv2(x))
+        return self.conv3(x)
 
-    # Here, model prediction will be applied
-    output_tensor = input_tensor  # Replace with model(img)
+class DCE_Net(nn.Module):
+    def __init__(self):
+        super(DCE_Net, self).__init__()
+        self.dce_block = DCEBlock(3)
 
-    output_img = output_tensor.squeeze().permute(1, 2, 0).detach().numpy()
-    output_img = (output_img * 255).astype(np.uint8)
-
-    return cv2.cvtColor(output_img, cv2.COLOR_RGB2BGR)
+    def forward(self, x):
+        A = self.dce_block(x)
+        R = torch.zeros_like(x)
+        for i in range(8):
+            R = R + A[:, i:i+1, :, :] * (torch.pow(R - 1, 2) - R)
+        return R
