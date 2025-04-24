@@ -1,12 +1,12 @@
 fastapi
 uvicorn
-torch
-torchvision
+torch==2.2.2
+torchvision==0.17.2
 opencv-python
 Pillow
-basicsr
-realesrgan
-facexlib
+basicsr==1.4.2
+realesrgan==0.3.0
+facexlib==0.3.0
 numpy
 tqdm
 gdown
