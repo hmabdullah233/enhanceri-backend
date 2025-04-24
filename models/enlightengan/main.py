@@ -1,27 +1,45 @@
 import torch
-import cv2
-import numpy as np
-from torchvision import transforms
-from PIL import Image
+import torch.nn as nn
 
-# Dummy EnlightenGAN model (replace with real one when integrating)
-def apply_enlightengan(img):
-    # Convert OpenCV image (BGR) to PIL image (RGB)
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    pil_img = Image.fromarray(img_rgb)
+class ConvBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, use_relu=True):
+        super(ConvBlock, self).__init__()
+        layers = [nn.Conv2d(in_channels, out_channels, 3, 1, 1, bias=False),
+                  nn.BatchNorm2d(out_channels)]
+        if use_relu:
+            layers.append(nn.ReLU(inplace=True))
+        self.block = nn.Sequential(*layers)
 
-    # Resize for the model
-    transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        transforms.ToTensor()
-    ])
-    input_tensor = transform(pil_img).unsqueeze(0)
+    def forward(self, x):
+        return self.block(x)
 
-    # Here, the actual model inference will happen
-    # For now, just return the original
-    output_tensor = input_tensor  # Replace with model(img)
+class ResidualBlock(nn.Module):
+    def __init__(self, channels):
+        super(ResidualBlock, self).__init__()
+        self.conv1 = ConvBlock(channels, channels)
+        self.conv2 = ConvBlock(channels, channels, use_relu=False)
 
-    output_img = output_tensor.squeeze().permute(1, 2, 0).detach().numpy()
-    output_img = (output_img * 255).astype(np.uint8)
+    def forward(self, x):
+        return x + self.conv2(self.conv1(x))
 
-    return cv2.cvtColor(output_img, cv2.COLOR_RGB2BGR)
+class Generator(nn.Module):
+    def __init__(self):
+        super(Generator, self).__init__()
+        self.encoder = nn.Sequential(
+            ConvBlock(3, 32),
+            ConvBlock(32, 32),
+            ConvBlock(32, 32)
+        )
+        self.res_blocks = nn.Sequential(*[ResidualBlock(32) for _ in range(4)])
+        self.decoder = nn.Sequential(
+            ConvBlock(32, 32),
+            ConvBlock(32, 32),
+            nn.Conv2d(32, 3, 3, 1, 1),
+            nn.Tanh()
+        )
+
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.res_blocks(x)
+        x = self.decoder(x)
+        return x
