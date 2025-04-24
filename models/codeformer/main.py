@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import torch
 from torchvision.transforms.functional import to_tensor, to_pil_image
-from basicsr.archs.codeformer_arch import CodeFormer
+from CodeFormer.basicsr.archs.codeformer_arch import CodeFormer  # updated import
 
 def apply_codeformer(img):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
