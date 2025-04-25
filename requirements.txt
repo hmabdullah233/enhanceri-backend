@@ -1,3 +1,4 @@
+-e ./models/codeformer
 fastapi
 uvicorn
 torch==2.0.1
