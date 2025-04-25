@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import torch
-from basicsr.archs.rrdbnet_arch import RRDBNet
+from models.codeformer.basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan import RealESRGANer
 
 def apply_realesrgan(img):
