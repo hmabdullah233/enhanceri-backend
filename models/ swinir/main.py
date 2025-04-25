@@ -1,14 +1,13 @@
 import cv2
 import numpy as np
 import torch
-from basicsr.archs.swinir_arch import SwinIR
-from basicsr.utils.download_util import load_file_from_url
+from models.codeformer.basicsr.archs.swinir_arch import SwinIR
+from models.codeformer.basicsr.utils.download_util import load_file_from_url
 from torchvision.transforms.functional import to_tensor, to_pil_image
 
 def apply_swinir(img):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # Define model
     model = SwinIR(
         upscale=2,
         in_chans=3,
@@ -31,7 +30,6 @@ def apply_swinir(img):
     model.load_state_dict(torch.load(model_path, map_location=device), strict=True)
     model.eval()
 
-    # Preprocess
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     pil_img = to_pil_image(img_rgb)
     tensor = to_tensor(pil_img).unsqueeze(0).to(device)
