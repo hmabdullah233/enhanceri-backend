@@ -5,7 +5,6 @@ torchvision==0.15.2
 opencv-python
 Pillow
 realesrgan==0.3.0
-facexlib==0.3.0
 numpy==1.26.4
 tqdm
 gdown
