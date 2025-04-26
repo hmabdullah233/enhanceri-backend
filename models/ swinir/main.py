@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 import torch
-from models.codeformer.basicsr.archs.swinir_arch import SwinIR
-from models.codeformer.basicsr.utils.download_util import load_file_from_url
+from models.basicsr.archs.swinir_arch import SwinIR
+from models.basicsr.utils.download_util import load_file_from_url
 from torchvision.transforms.functional import to_tensor, to_pil_image
 
 def apply_swinir(img):
