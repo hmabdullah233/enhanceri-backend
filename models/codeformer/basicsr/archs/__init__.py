@@ -2,21 +2,27 @@ import importlib
 from copy import deepcopy
 from os import path as osp
 
-from models.codeformer.basicsr.utils import get_root_logger, scandir
-from models.codeformer.basicsr.utils.registry import ARCH_REGISTRY
+from basicsr.utils import get_root_logger, scandir
+from basicsr.utils.registry import ARCH_REGISTRY
 
 __all__ = ['build_network']
 
 # automatically scan and import arch modules for registry
-# scan all the files under the 'archs' folder and collect files ending with
-# '_arch.py'
+# scan all the files under the 'archs' folder and collect files ending with '_arch.py'
 arch_folder = osp.dirname(osp.abspath(__file__))
-arch_filenames = [osp.splitext(osp.basename(v))[0] for v in scandir(arch_folder) if v.endswith('_arch.py')]
-
-# import all the arch modules with correct absolute path
-_arch_modules = [
-    importlib.import_module(f'models.codeformer.basicsr.archs.{file_name}') for file_name in arch_filenames
+arch_filenames = [
+    osp.splitext(osp.basename(v))[0] 
+    for v in scandir(arch_folder) if v.endswith('_arch.py')
 ]
+
+# import all the arch modules safely (prevent duplicate registration)
+_imported = set()
+for file_name in arch_filenames:
+    module_name = f'models.codeformer.basicsr.archs.{file_name}'
+    if module_name not in _imported:
+        importlib.import_module(module_name)
+        _imported.add(module_name)
+
 
 def build_network(opt):
     opt = deepcopy(opt)
