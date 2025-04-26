@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 import torch
 from torchvision.transforms.functional import to_tensor, to_pil_image
-from models.codeformer.basicsr.archs.rrdbnet_arch import RRDBNet
-from models.codeformer.basicsr.utils.download_util import load_file_from_url
+from models.basicsr.archs.rrdbnet_arch import RRDBNet
+from models.basicsr.utils.download_util import load_file_from_url
 
 def apply_bsrgan(img):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
