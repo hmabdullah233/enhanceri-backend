@@ -2,8 +2,8 @@ import importlib
 from copy import deepcopy
 from os import path as osp
 
-from basicsr.utils import get_root_logger, scandir
-from basicsr.utils.registry import ARCH_REGISTRY
+from models.codeformer.basicsr.utils import get_root_logger, scandir
+from models.codeformer.basicsr.utils.registry import ARCH_REGISTRY
 
 __all__ = ['build_network']
 
@@ -12,9 +12,11 @@ __all__ = ['build_network']
 # '_arch.py'
 arch_folder = osp.dirname(osp.abspath(__file__))
 arch_filenames = [osp.splitext(osp.basename(v))[0] for v in scandir(arch_folder) if v.endswith('_arch.py')]
-# import all the arch modules
-_arch_modules = [importlib.import_module(f'basicsr.archs.{file_name}') for file_name in arch_filenames]
 
+# import all the arch modules with correct absolute path
+_arch_modules = [
+    importlib.import_module(f'models.codeformer.basicsr.archs.{file_name}') for file_name in arch_filenames
+]
 
 def build_network(opt):
     opt = deepcopy(opt)
