@@ -1,6 +1,4 @@
-import os
 import time
-import urllib.request
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
 from utils.image_utils import full_enhance
