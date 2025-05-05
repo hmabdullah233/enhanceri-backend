@@ -9,4 +9,5 @@ numpy==1.26.4
 tqdm
 gdown
 scikit-image
+python-multipart
 basicsr==1.4.2
